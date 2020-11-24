@@ -1,9 +1,10 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 function PopupWithImage({ isOpen, src, subtitle, onClose }) {
   let popupStyle = `popup`;
   if (isOpen) {
-    popupStyle += " popup_opened";
+    popupStyle += ' popup_opened';
   }
 
   const handleClosePopupByClickOutside = (evt) => {
@@ -13,18 +14,30 @@ function PopupWithImage({ isOpen, src, subtitle, onClose }) {
   };
 
   return (
-    <div className={popupStyle} onClick={handleClosePopupByClickOutside}>
+    <div className={popupStyle} role="presentation" onClick={handleClosePopupByClickOutside}>
       <div className="popup__container">
         <button
           type="button"
+          aria-label="Закрыть всплывающее окно с картинкой"
           className="popup__close-icon"
           onClick={onClose}
-        ></button>
+        />
         <img src={src} alt="#" className="popup__image" />
         <p className="popup__img-subtitle">{subtitle}</p>
       </div>
     </div>
   );
 }
+
+PopupWithImage.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  src: PropTypes.string.isRequired,
+  subtitle: PropTypes.string.isRequired,
+};
+
+PopupWithImage.defaultProps = {
+  isOpen: false,
+};
 
 export default PopupWithImage;

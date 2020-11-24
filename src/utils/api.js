@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 class Api {
   constructor(url, token) {
     this._url = url;
@@ -8,12 +9,12 @@ class Api {
     if (res.ok) {
       return res.json();
     }
-    return Promise.reject(`Ошибка: ${res.status}`);
+    return Promise.reject(new Error(`Ошибка: ${res.status}`));
   }
 
   getUserInfo() {
-    return fetch(this._url + "users/me", {
-      method: "GET",
+    return fetch(`${this._url}users/me`, {
+      method: 'GET',
       headers: {
         authorization: this._token,
       },
@@ -21,11 +22,11 @@ class Api {
   }
 
   updateUserInfo(newName, newAbout) {
-    return fetch(this._url + "users/me", {
-      method: "PATCH",
+    return fetch(`${this._url}users/me`, {
+      method: 'PATCH',
       headers: {
         authorization: this._token,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         name: newName,
@@ -35,11 +36,11 @@ class Api {
   }
 
   updateUserAvatar(newAvatar) {
-    return fetch(this._url + "users/me/avatar", {
-      method: "PATCH",
+    return fetch(`${this._url}users/me/avatar`, {
+      method: 'PATCH',
       headers: {
         authorization: this._token,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         avatar: newAvatar,
@@ -48,8 +49,8 @@ class Api {
   }
 
   getCards() {
-    return fetch(this._url + "cards", {
-      method: "GET",
+    return fetch(`${this._url}cards`, {
+      method: 'GET',
       headers: {
         authorization: this._token,
       },
@@ -57,11 +58,11 @@ class Api {
   }
 
   addNewCard(cardName, cardLink) {
-    return fetch(this._url + "cards", {
-      method: "POST",
+    return fetch(`${this._url}cards`, {
+      method: 'POST',
       headers: {
         authorization: this._token,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         name: cardName,
@@ -71,8 +72,8 @@ class Api {
   }
 
   deleteCard(cardID) {
-    return fetch(this._url + "cards/" + cardID, {
-      method: "DELETE",
+    return fetch(`${this._url}cards/${cardID}`, {
+      method: 'DELETE',
       headers: {
         authorization: this._token,
       },
@@ -80,8 +81,8 @@ class Api {
   }
 
   putLike(cardID) {
-    return fetch(this._url + "cards/likes/" + cardID, {
-      method: "PUT",
+    return fetch(`${this._url}cards/likes/${cardID}`, {
+      method: 'PUT',
       headers: {
         authorization: this._token,
       },
@@ -89,18 +90,18 @@ class Api {
   }
 
   removeLike(cardID) {
-    return fetch(this._url + "cards/likes/" + cardID, {
-      method: "DELETE",
+    return fetch(`${this._url}cards/likes/${cardID}`, {
+      method: 'DELETE',
       headers: {
         authorization: this._token,
       },
     }).then((res) => this._getResponseData(res));
   }
-};
+}
 
-const api = new Api (
-  "https://mesto.nomoreparties.co/v1/cohort-15/",
-  "00e3d586-abb9-483a-af25-8c5b37844ed8"
+const api = new Api(
+  'https://mesto.nomoreparties.co/v1/cohort-15/',
+  '00e3d586-abb9-483a-af25-8c5b37844ed8',
 );
 
 export default api;

@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
-import PopupWithForm from "./PopupWithForm";
-import { CurrentUserContext } from "../contexts/currentUser";
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import PopupWithForm from './PopupWithForm';
+import CurrentUserContext from '../contexts/currentUser';
 
 function EditProfilePopup({ isOpen, onClose, onSubmit }) {
   const currentUser = React.useContext(CurrentUserContext);
 
-  const [name, setName] = React.useState("");
-  const [about, setAbout] = React.useState("");
+  const [name, setName] = React.useState('');
+  const [about, setAbout] = React.useState('');
 
   useEffect(() => {
     setName(currentUser.name);
@@ -27,7 +28,7 @@ function EditProfilePopup({ isOpen, onClose, onSubmit }) {
       onSubmit={handleEditProfileFormSubmit}
       inputs={
         <>
-          <label className="popup__form-label">
+          <label htmlFor="edit-form_name" className="popup__form-label">
             <input
               id="edit-form_name"
               name="edit-form_name"
@@ -41,7 +42,7 @@ function EditProfilePopup({ isOpen, onClose, onSubmit }) {
             />
             <span id="edit-form_name-error" className="popup__input-error" />
           </label>
-          <label className="popup__form-label">
+          <label htmlFor="edit-form_about" className="popup__form-label">
             <input
               id="edit-form_about"
               name="edit-form_about"
@@ -60,5 +61,15 @@ function EditProfilePopup({ isOpen, onClose, onSubmit }) {
     />
   );
 }
+
+EditProfilePopup.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
+EditProfilePopup.defaultProps = {
+  isOpen: false,
+};
 
 export default EditProfilePopup;

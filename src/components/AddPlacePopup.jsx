@@ -1,15 +1,15 @@
-import React from "react";
-import PopupWithForm from "./PopupWithForm";
+import React from 'react';
+import PropTypes from 'prop-types';
+import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup({ isOpen, onClose, onSubmit }) {
-  const [newName, setNewName] = React.useState("");
-  const [newSrc, setNewSrc] = React.useState("");
-
+  const [newName, setNewName] = React.useState('');
+  const [newSrc, setNewSrc] = React.useState('');
 
   const handleAddPlaceFormSubmit = (buttonRef) => {
     const cleanUp = () => {
-      setNewName("");
-      setNewSrc("");
+      setNewName('');
+      setNewSrc('');
     };
     onSubmit(newName, newSrc, buttonRef, cleanUp);
   };
@@ -24,7 +24,7 @@ function AddPlacePopup({ isOpen, onClose, onSubmit }) {
       onSubmit={handleAddPlaceFormSubmit}
       inputs={
         <>
-          <label className="popup__form-label">
+          <label htmlFor="add-form_name" className="popup__form-label">
             <input
               id="add-form_name"
               name="add-form_name"
@@ -39,7 +39,7 @@ function AddPlacePopup({ isOpen, onClose, onSubmit }) {
             />
             <span id="add-form_name-error" className="popup__input-error" />
           </label>
-          <label className="popup__form-label">
+          <label htmlFor="add-form_src" className="popup__form-label">
             <input
               id="add-form_src"
               name="add-form_src"
@@ -57,5 +57,15 @@ function AddPlacePopup({ isOpen, onClose, onSubmit }) {
     />
   );
 }
+
+AddPlacePopup.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
+AddPlacePopup.defaultProps = {
+  isOpen: false,
+};
 
 export default AddPlacePopup;

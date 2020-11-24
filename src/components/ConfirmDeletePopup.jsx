@@ -1,8 +1,8 @@
-import React from "react";
-import PopupWithForm from "./PopupWithForm";
+import React from 'react';
+import PropTypes from 'prop-types';
+import PopupWithForm from './PopupWithForm';
 
 function ConfirmDeletePopup({ isOpen, onClose, onSubmit }) {
-
   const handleConfirmDeleteFormSubmit = (buttonRef) => {
     onSubmit(buttonRef);
   };
@@ -18,5 +18,15 @@ function ConfirmDeletePopup({ isOpen, onClose, onSubmit }) {
     />
   );
 }
+
+ConfirmDeletePopup.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
+ConfirmDeletePopup.defaultProps = {
+  isOpen: false,
+};
 
 export default ConfirmDeletePopup;

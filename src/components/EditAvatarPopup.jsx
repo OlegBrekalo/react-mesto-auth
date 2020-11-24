@@ -1,12 +1,13 @@
-import React, { useRef } from "react";
-import PopupWithForm from "./PopupWithForm";
+import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
+import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup({ isOpen, onClose, onSubmit }) {
   const avatarInput = useRef(null);
 
   const handleEditAvatarFormSubmit = (buttonRef) => {
     const cleanUp = () => {
-      avatarInput.current.value = "";
+      avatarInput.current.value = '';
     };
     onSubmit(avatarInput.current.value, buttonRef, cleanUp);
   };
@@ -21,7 +22,7 @@ function EditAvatarPopup({ isOpen, onClose, onSubmit }) {
       onSubmit={handleEditAvatarFormSubmit}
       inputs={
         <>
-          <label className="popup__form-label">
+          <label htmlFor="avatar-form_src" className="popup__form-label">
             <input
               id="avatar-form_src"
               name="avatar-form_src"
@@ -38,5 +39,15 @@ function EditAvatarPopup({ isOpen, onClose, onSubmit }) {
     />
   );
 }
+
+EditAvatarPopup.propTypes = {
+  isOpen: PropTypes.bool,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
+EditAvatarPopup.defaultProps = {
+  isOpen: false,
+};
 
 export default EditAvatarPopup;

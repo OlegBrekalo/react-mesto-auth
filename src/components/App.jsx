@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CurrentUserContext } from '../contexts/currentUser';
+import CurrentUserContext from '../contexts/currentUser';
 
 import Header from './Header';
 import Main from './Main';
@@ -21,6 +21,7 @@ function App() {
   const [isEditAvatarOpen, setEditAvatarOpen] = useState(false);
   const [cardIdPrepareForRemove, setCardIdPrepareForRemove] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [cards, setCards] = useState([]);
 
   const [currentUser, setCurrentUser] = React.useState({
     id: '',
@@ -29,12 +30,13 @@ function App() {
     avatar: '',
   });
 
-  //First Init
+  // First Init
+
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getCards()])
       .then((data) => {
-        const [userInfo, cards] = data;
-        setCards(cards);
+        const [userInfo, initCards] = data;
+        setCards(initCards);
         setCurrentUser({
           id: userInfo._id,
           name: userInfo.name,
@@ -43,13 +45,14 @@ function App() {
         });
       })
       .catch((err) => {
-        console.log(`Error on - First Init`);
+        console.log('Error on - First Init');
         console.log(`Error message - ${err}`);
       });
   }, []);
 
   const handleKeyPress = (event) => {
     if (event.key === 'Escape') {
+      // eslint-disable-next-line no-use-before-define
       closeAllPopups();
     }
   };
@@ -69,8 +72,7 @@ function App() {
     document.removeEventListener('keydown', handleKeyPress);
   };
 
-  //#region Cards and handlers
-  const [cards, setCards] = useState([]);
+  // #region Cards and handlers
 
   const handeCardClick = (link, name) => {
     setSelectedCard({
@@ -86,7 +88,7 @@ function App() {
           return { ...card, likes: cardJSON.likes };
         }
         return card;
-      })
+      }),
     );
   };
 
@@ -98,7 +100,7 @@ function App() {
           mapNewCards(idCard, cardJSON);
         })
         .catch((err) => {
-          console.log(`Error on - putLike`);
+          console.log('Error on - putLike');
           console.log(`Error message - ${err}`);
         });
     } else {
@@ -108,7 +110,7 @@ function App() {
           mapNewCards(idCard, cardJSON);
         })
         .catch((err) => {
-          console.log(`Error on - removeLike`);
+          console.log('Error on - removeLike');
           console.log(`Error message - ${err}`);
         });
     }
@@ -117,11 +119,12 @@ function App() {
   const handleCardDelete = (cardId) => {
     setCardIdPrepareForRemove(cardId);
   };
-  //#endregion
+  // #endregion
 
-  //#region Forms Submit Handlers
-  const handleUpdateUserProfile = (name, about, buttonRef) => {
-    const oldButtonCaption = buttonRef.current.textContent;
+  // #region Forms Submit Handlers
+  const handleUpdateUserProfile = (name, about, ref) => {
+    const oldButtonCaption = ref.current.textContent;
+    const buttonRef = ref;
     buttonRef.current.textContent = 'Сохраняю...';
     api
       .updateUserInfo(name, about)
@@ -135,13 +138,14 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => {
-        console.log(`Error on - handleUpdateUserProfile`);
+        console.log('Error on - handleUpdateUserProfile');
         console.log(`Error message - ${err}`);
       });
   };
 
-  const handleUpdateUserAvatar = (newAvatar, buttonRef, cleanUp) => {
-    const oldButtonCaption = buttonRef.current.textContent;
+  const handleUpdateUserAvatar = (newAvatar, ref, cleanUp) => {
+    const oldButtonCaption = ref.current.textContent;
+    const buttonRef = ref;
     buttonRef.current.textContent = 'Сохраняю...';
     api
       .updateUserAvatar(newAvatar)
@@ -152,13 +156,14 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => {
-        console.log(`Error on - handleUpdateUserAvatar`);
+        console.log('Error on - handleUpdateUserAvatar');
         console.log(`Error message - ${err}`);
       });
   };
 
-  const handleAddPlaceSubmit = (newName, newSrc, buttonRef, cleanUp) => {
-    const oldButtonCaption = buttonRef.current.textContent;
+  const handleAddPlaceSubmit = (newName, newSrc, ref, cleanUp) => {
+    const oldButtonCaption = ref.current.textContent;
+    const buttonRef = ref;
     buttonRef.current.textContent = 'Создаю...';
     api
       .addNewCard(newName, newSrc)
@@ -169,49 +174,48 @@ function App() {
         closeAllPopups();
       })
       .catch((err) => {
-        console.log(`Error on - handleAddPlaceSubmit`);
+        console.log('Error on - handleAddPlaceSubmit');
         console.log(`Error message - ${err}`);
       });
   };
 
-  const handleRemovePlaceSubmit = (buttonRef) => {
-    const oldButtonCaption = buttonRef.current.textContent;
+  const handleRemovePlaceSubmit = (ref) => {
+    const oldButtonCaption = ref.current.textContent;
+    const buttonRef = ref;
     buttonRef.current.textContent = 'Удаляю...';
     api
       .deleteCard(cardIdPrepareForRemove)
       .then(() => {
-        setCards(
-          cards.filter((card) => {
-            return card._id !== cardIdPrepareForRemove;
-          })
-        );
+        setCards(cards.filter((card) => card._id !== cardIdPrepareForRemove));
         buttonRef.current.textContent = oldButtonCaption;
         closeAllPopups();
       })
       .catch((err) => {
-        console.log(`Error on - handleRemovePlaceSubmit`);
+        console.log('Error on - handleRemovePlaceSubmit');
         console.log(`Error message - ${err}`);
       });
   };
 
-  //#endregion
+  // #endregion
   return (
     <div className="content">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
-        <Main
-          cards={cards}
-          handlersProfile={{
-            setOpenEditProfile: setEditProfileOpen,
-            setOpenEditAvatar: setEditAvatarOpen,
-            setOpenAddPlace: setAddPlaceOpen,
-          }}
-          handlersCard={{
-            click: handeCardClick,
-            like: handleCardLike,
-            delete: handleCardDelete,
-          }}
-        />
+        {cards.length !== 0 && (
+          <Main
+            cards={cards}
+            handlersProfile={{
+              setOpenEditProfile: setEditProfileOpen,
+              setOpenEditAvatar: setEditAvatarOpen,
+              setOpenAddPlace: setAddPlaceOpen,
+            }}
+            handlersCard={{
+              click: handeCardClick,
+              like: handleCardLike,
+              delete: handleCardDelete,
+            }}
+          />
+        )}
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfileOpen}
@@ -235,7 +239,8 @@ function App() {
         />
         <PopupWithImage
           isOpen={!!selectedCard}
-          {...selectedCard}
+          src={selectedCard ? selectedCard.src : ''}
+          subtitle={selectedCard ? selectedCard.subtitle : ''}
           onClose={closeAllPopups}
         />
       </CurrentUserContext.Provider>
