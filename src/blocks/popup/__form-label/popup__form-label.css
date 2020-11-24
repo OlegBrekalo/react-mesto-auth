@@ -1,0 +1,8 @@
+.popup__form-label{
+  display: flex;
+  flex-direction: column;
+}
+
+.popup__form-label:nth-child(2){
+  margin-bottom: 10px;
+}
