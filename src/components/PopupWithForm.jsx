@@ -30,10 +30,10 @@ function PopupWithForm({ isOpen, title, name, inputs, buttonText, onClose, onSub
           className="popup__close-icon"
           onClick={onClose}
         />
-        <p className="popup__title">{title}</p>
-        <form className="popup__form" autoComplete="off" onSubmit={handleSubmitForm}>
+        <form className="form" autoComplete="off" onSubmit={handleSubmitForm}>
+          <p className="form__title">{title}</p>
           {inputs}
-          <button type="submit" className="popup__submit-button" ref={buttonRef}>
+          <button type="submit" className="form__submit-button" ref={buttonRef}>
             {buttonText}
           </button>
         </form>

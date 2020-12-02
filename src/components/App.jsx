@@ -1,52 +1,90 @@
 import React, { useState, useEffect } from 'react';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import CurrentUserContext from '../contexts/currentUser';
 
 import Header from './Header';
+import ProtectedRoute from './ProtectedRoute';
 import Main from './Main';
+import Register from './Register';
+import Login from './Login';
 import Footer from './Footer';
 
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ConfirmDeletePopup from './ConfirmDeletePopup';
-
+import InfoTooltip from './InfoTooltip';
 import PopupWithImage from './PopupWithImage';
 
 import '../index.css';
 import api from '../utils/api';
+import authApi from '../utils/authApi';
 
 function App() {
+  const history = useHistory();
+
+  // eslint-disable-next-line no-unused-vars
+  const [init, setInit] = useState(false);
+  const [loggedIn, setloggedIn] = useState(false);
   const [isEditProfileOpen, setEditProfileOpen] = useState(false);
   const [isAddPlaceOpen, setAddPlaceOpen] = useState(false);
   const [isEditAvatarOpen, setEditAvatarOpen] = useState(false);
   const [cardIdPrepareForRemove, setCardIdPrepareForRemove] = useState(null);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [infoTooltip, setInfoTooltip] = useState(null);
+
   const [cards, setCards] = useState([]);
 
-  const [currentUser, setCurrentUser] = React.useState({
+  const [currentUser, setCurrentUser] = useState({
     id: '',
     name: '',
     about: '',
     avatar: '',
+    email: '',
   });
 
-  // First Init
+  const tokenValidate = () => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      return authApi.validateToken(jwt).then((res) => {
+        setCurrentUser({
+          id: res.data._id,
+          email: res.data.email,
+        });
+        setloggedIn(true);
+      });
+    }
+    return Promise.reject();
+  };
 
   useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getCards()])
-      .then((data) => {
-        const [userInfo, initCards] = data;
-        setCards(initCards);
-        setCurrentUser({
-          id: userInfo._id,
-          name: userInfo.name,
-          about: userInfo.about,
-          avatar: userInfo.avatar,
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getCards()])
+        .then((data) => {
+          const [userInfo, initCards] = data;
+          setCards(initCards);
+          setCurrentUser({
+            ...currentUser,
+            id: userInfo._id,
+            name: userInfo.name,
+            about: userInfo.about,
+            avatar: userInfo.avatar,
+          });
+        })
+        .catch((err) => {
+          console.log('Error on - Render Main page');
+          console.log(`Error message - ${err}`);
         });
+    }
+  }, [loggedIn]);
+
+  useEffect(() => {
+    tokenValidate()
+      .then(() => {
+        setloggedIn(true);
       })
-      .catch((err) => {
-        console.log('Error on - First Init');
-        console.log(`Error message - ${err}`);
+      .finally(() => {
+        setInit(true);
       });
   }, []);
 
@@ -67,6 +105,7 @@ function App() {
     setEditAvatarOpen(false);
 
     setCardIdPrepareForRemove(null);
+    setInfoTooltip(null);
     setSelectedCard(null);
 
     document.removeEventListener('keydown', handleKeyPress);
@@ -197,24 +236,95 @@ function App() {
   };
 
   // #endregion
+
+  // #region infoTooltip
+  const infoTooltipSuccesSignUp = () => {
+    setInfoTooltip({ title: 'Вы успешно зарегистрировались!', type: 'ok' });
+  };
+
+  const infoTooltipError = (errorMessage = 'Что-то пошло не так! Попробуйте ещё раз.') => {
+    setInfoTooltip({ title: errorMessage, type: 'error' });
+  };
+  // #endregion
+
+  // #region  Auth Handlers
+  const onSignUp = (email, password, cleanUp) => {
+    authApi
+      .signUp(email, password)
+      .then(() => {
+        infoTooltipSuccesSignUp();
+        cleanUp();
+      })
+      .catch((err) => {
+        if (err.message === 'Ошибка: 400') {
+          infoTooltipError('Такой email уже существует');
+        } else {
+          infoTooltipError();
+        }
+      });
+  };
+
+  const onLogin = (email, password, cleanUp) => {
+    authApi
+      .signIn(email, password)
+      .then((res) => {
+        localStorage.setItem('jwt', res.token);
+        cleanUp();
+        return tokenValidate();
+      })
+      .then(() => {
+        history.push('./');
+      })
+      .catch((err) => {
+        if (err.message === 'Ошибка: 401') {
+          infoTooltipError('Введен неправильный email или пароль!');
+        } else {
+          infoTooltipError();
+        }
+      });
+  };
+
+  const onSignOut = () => {
+    localStorage.removeItem('jwt');
+    setloggedIn(false);
+    history.push('/sign-in');
+  };
+
+  // #endregion
   return (
     <div className="content">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
-        {cards.length !== 0 && (
-          <Main
-            cards={cards}
-            handlersProfile={{
-              setOpenEditProfile: setEditProfileOpen,
-              setOpenEditAvatar: setEditAvatarOpen,
-              setOpenAddPlace: setAddPlaceOpen,
-            }}
-            handlersCard={{
-              click: handeCardClick,
-              like: handleCardLike,
-              delete: handleCardDelete,
-            }}
-          />
+        <Header loggedIn={loggedIn} onSignOut={onSignOut} />
+        {init && (
+          <Switch>
+            <ProtectedRoute
+              loggedIn
+              exact
+              path="/"
+              component={Main}
+              cards={cards}
+              handlersProfile={{
+                setOpenEditProfile: setEditProfileOpen,
+                setOpenEditAvatar: setEditAvatarOpen,
+                setOpenAddPlace: setAddPlaceOpen,
+              }}
+              handlersCard={{
+                click: handeCardClick,
+                like: handleCardLike,
+                delete: handleCardDelete,
+              }}
+            />
+            <Route path="/sign-up">
+              <Register
+                onSubmit={onSignUp}
+                showOk={infoTooltipSuccesSignUp}
+                showError={infoTooltipError}
+              />
+            </Route>
+            <Route path="/sign-in">
+              <Login onSubmit={onLogin} showError={infoTooltipError} />
+            </Route>
+          </Switch>
         )}
         <Footer />
         <EditProfilePopup
@@ -239,8 +349,14 @@ function App() {
         />
         <PopupWithImage
           isOpen={!!selectedCard}
-          src={selectedCard ? selectedCard.src : ''}
-          subtitle={selectedCard ? selectedCard.subtitle : ''}
+          src={selectedCard && selectedCard.src}
+          subtitle={selectedCard && selectedCard.subtitle}
+          onClose={closeAllPopups}
+        />
+        <InfoTooltip
+          isOpen={!!infoTooltip}
+          title={infoTooltip && infoTooltip.title}
+          type={infoTooltip && infoTooltip.type}
           onClose={closeAllPopups}
         />
       </CurrentUserContext.Provider>

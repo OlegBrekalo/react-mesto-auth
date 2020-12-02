@@ -1,21 +1,20 @@
-.popup__input-text{
+.form__input-text {
   border: 0;
   border-bottom: 1px solid grey;
 
   margin-bottom: 6px;
-
+  width: 100%;
   font-size: 14px;
   line-height: 2.5;
   padding: 1px;
-
 }
 
-.popup__input-text:invalid{
+.form__input-text:invalid {
   box-shadow: none;
 }
 
-@media screen and (max-width: 530px){
-  .popup__input-text{
+@media screen and (max-width: 530px) {
+  .form__input-text {
     font-size: 12px;
     line-height: 2.5;
     padding: 1px;

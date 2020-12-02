@@ -1,15 +1,10 @@
-/* eslint-disable class-methods-use-this */
+import escape from 'escape-html';
+import getResponseData from './getResponseData';
+
 class Api {
   constructor(url, token) {
     this._url = url;
     this._token = token;
-  }
-
-  _getResponseData(res) {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(new Error(`Ошибка: ${res.status}`));
   }
 
   getUserInfo() {
@@ -18,7 +13,7 @@ class Api {
       headers: {
         authorization: this._token,
       },
-    }).then((res) => this._getResponseData(res));
+    }).then((res) => getResponseData(res));
   }
 
   updateUserInfo(newName, newAbout) {
@@ -29,10 +24,10 @@ class Api {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: newName,
-        about: newAbout,
+        name: escape(newName),
+        about: escape(newAbout),
       }),
-    }).then((res) => this._getResponseData(res));
+    }).then((res) => getResponseData(res));
   }
 
   updateUserAvatar(newAvatar) {
@@ -43,9 +38,9 @@ class Api {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        avatar: newAvatar,
+        avatar: escape(newAvatar),
       }),
-    }).then((res) => this._getResponseData(res));
+    }).then((res) => getResponseData(res));
   }
 
   getCards() {
@@ -54,7 +49,7 @@ class Api {
       headers: {
         authorization: this._token,
       },
-    }).then((res) => this._getResponseData(res));
+    }).then((res) => getResponseData(res));
   }
 
   addNewCard(cardName, cardLink) {
@@ -65,10 +60,10 @@ class Api {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: cardName,
-        link: cardLink,
+        name: escape(cardName),
+        link: escape(cardLink),
       }),
-    }).then((res) => this._getResponseData(res));
+    }).then((res) => getResponseData(res));
   }
 
   deleteCard(cardID) {
@@ -77,7 +72,7 @@ class Api {
       headers: {
         authorization: this._token,
       },
-    }).then((res) => this._getResponseData(res));
+    }).then((res) => getResponseData(res));
   }
 
   putLike(cardID) {
@@ -86,7 +81,7 @@ class Api {
       headers: {
         authorization: this._token,
       },
-    }).then((res) => this._getResponseData(res));
+    }).then((res) => getResponseData(res));
   }
 
   removeLike(cardID) {
@@ -95,7 +90,7 @@ class Api {
       headers: {
         authorization: this._token,
       },
-    }).then((res) => this._getResponseData(res));
+    }).then((res) => getResponseData(res));
   }
 }
 

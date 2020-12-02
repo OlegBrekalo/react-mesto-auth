@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { onErrorMockImage } from '../utils/constants';
 
 function PopupWithImage({ isOpen, src, subtitle, onClose }) {
   let popupStyle = `popup`;
@@ -32,12 +33,14 @@ function PopupWithImage({ isOpen, src, subtitle, onClose }) {
 PopupWithImage.propTypes = {
   isOpen: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
-  src: PropTypes.string.isRequired,
-  subtitle: PropTypes.string.isRequired,
+  src: PropTypes.string,
+  subtitle: PropTypes.string,
 };
 
 PopupWithImage.defaultProps = {
   isOpen: false,
+  src: onErrorMockImage,
+  subtitle: 'Неизвестное место',
 };
 
 export default PopupWithImage;

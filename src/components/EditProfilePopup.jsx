@@ -28,7 +28,7 @@ function EditProfilePopup({ isOpen, onClose, onSubmit }) {
       onSubmit={handleEditProfileFormSubmit}
       inputs={
         <>
-          <label htmlFor="edit-form_name" className="popup__form-label">
+          <label htmlFor="edit-form_name" className="form__label">
             <input
               id="edit-form_name"
               name="edit-form_name"
@@ -36,13 +36,13 @@ function EditProfilePopup({ isOpen, onClose, onSubmit }) {
               required
               minLength={2}
               maxLength={40}
-              className="popup__input-text edit-popup__input-text_type_name"
+              className="form__input-text edit-popup__input-text_type_name"
               value={name}
               onChange={(evt) => setName(evt.target.value)}
             />
-            <span id="edit-form_name-error" className="popup__input-error" />
+            <span id="edit-form_name-error" className="form__input-error" />
           </label>
-          <label htmlFor="edit-form_about" className="popup__form-label">
+          <label htmlFor="edit-form_about" className="form__form-label">
             <input
               id="edit-form_about"
               name="edit-form_about"
@@ -50,11 +50,11 @@ function EditProfilePopup({ isOpen, onClose, onSubmit }) {
               required
               minLength={2}
               maxLength={200}
-              className="popup__input-text edit-popup__input-text_type_job"
+              className="form__input-text edit-popup__input-text_type_job"
               value={about}
               onChange={(evt) => setAbout(evt.target.value)}
             />
-            <span id="edit-form_about-error" className="popup__input-error" />
+            <span id="edit-form_about-error" className="form__input-error" />
           </label>
         </>
       }

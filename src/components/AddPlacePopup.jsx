@@ -24,7 +24,7 @@ function AddPlacePopup({ isOpen, onClose, onSubmit }) {
       onSubmit={handleAddPlaceFormSubmit}
       inputs={
         <>
-          <label htmlFor="add-form_name" className="popup__form-label">
+          <label htmlFor="add-form_name" className="form__label">
             <input
               id="add-form_name"
               name="add-form_name"
@@ -33,24 +33,24 @@ function AddPlacePopup({ isOpen, onClose, onSubmit }) {
               minLength={1}
               maxLength={30}
               placeholder="Название"
-              className="popup__input-text add-form__input-text_type_name"
+              className="form__input-text add-form__input-text_type_name"
               value={newName}
               onChange={(evt) => setNewName(evt.target.value)}
             />
-            <span id="add-form_name-error" className="popup__input-error" />
+            <span id="add-form_name-error" className="form__input-error" />
           </label>
-          <label htmlFor="add-form_src" className="popup__form-label">
+          <label htmlFor="add-form_src" className="form__form-label">
             <input
               id="add-form_src"
               name="add-form_src"
               type="url"
               required
               placeholder="Ссылка на картинку"
-              className="popup__input-text add-form__input-text_type_src"
+              className="form__input-text add-form__input-text_type_src"
               value={newSrc}
               onChange={(evt) => setNewSrc(evt.target.value)}
             />
-            <span id="add-form_src-error" className="popup__input-error" />
+            <span id="add-form_src-error" className="form__input-error" />
           </label>
         </>
       }

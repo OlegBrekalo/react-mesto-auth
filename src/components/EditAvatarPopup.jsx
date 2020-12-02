@@ -22,17 +22,17 @@ function EditAvatarPopup({ isOpen, onClose, onSubmit }) {
       onSubmit={handleEditAvatarFormSubmit}
       inputs={
         <>
-          <label htmlFor="avatar-form_src" className="popup__form-label">
+          <label htmlFor="avatar-form_src" className="form__label">
             <input
               id="avatar-form_src"
               name="avatar-form_src"
               type="url"
               required
               placeholder="Ссылка на аватар"
-              className="popup__input-text avatar-form__input-text_type_src"
+              className="form__input-text avatar-form__input-text_type_src"
               ref={avatarInput}
             />
-            <span id="avatar-form_src-error" className="popup__input-error" />
+            <span id="avatar-form_src-error" className="form__input-error" />
           </label>
         </>
       }

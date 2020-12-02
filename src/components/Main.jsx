@@ -8,7 +8,7 @@ function Main({ handlersProfile, cards, handlersCard }) {
   const currentUser = React.useContext(CurrentUserContext);
 
   return (
-    <main>
+    <main className="main">
       <section className="profile content-section">
         <div className="profile__avatar-wrapper">
           <img
@@ -39,7 +39,6 @@ function Main({ handlersProfile, cards, handlersCard }) {
       <section className="elements content-section">
         <ul className="elements__img-grid">
           {cards.map(({ _id, ...item }) => (
-            // eslint-disable-next-line react/jsx-indent
             <Card
               key={_id}
               id={_id}

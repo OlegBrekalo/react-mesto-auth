@@ -1,14 +1,13 @@
-.header{
-  margin-top: 45px;
+.header {
+  margin-top: 32px;
 
-  display: flex;
+  display: grid;
+  grid-template-columns: 142px auto min-content;
   border-bottom: 1px solid #545454;
-
-  margin-bottom: 40px;
 }
 
-@media screen and (max-width: 750px){
-  .header{
+@media screen and (max-width: 750px) {
+  .header {
     width: 100%;
     margin-top: 28px;
     margin-bottom: 42px;
