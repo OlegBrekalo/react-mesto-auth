@@ -45,6 +45,7 @@ function App() {
 
   const tokenValidate = () => {
     const jwt = localStorage.getItem('jwt');
+    console.log(loggedIn);
     if (jwt) {
       return authApi.validateToken(jwt).then((res) => {
         setCurrentUser({
@@ -298,7 +299,7 @@ function App() {
         {init && (
           <Switch>
             <ProtectedRoute
-              loggedIn
+              loggedIn={loggedIn}
               exact
               path="/"
               component={Main}
