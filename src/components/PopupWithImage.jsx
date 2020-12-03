@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { onErrorMockImage } from '../utils/constants';
 
 function PopupWithImage({ isOpen, src, subtitle, onClose }) {
-  let popupStyle = `popup`;
-  if (isOpen) {
-    popupStyle += ' popup_opened';
-  }
+  const popupStyle = classNames('popup', { popup_opened: isOpen });
 
   const handleClosePopupByClickOutside = (evt) => {
     if (evt.currentTarget === evt.target) {

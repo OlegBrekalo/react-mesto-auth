@@ -6,12 +6,7 @@ import CurrentUserContext from '../contexts/currentUser';
 function Card({ id, name, link, likes, owner, onClick, onLike, onDelete }) {
   const currentUser = React.useContext(CurrentUserContext);
 
-  const isLiked = !!(
-    likes.length !== 0 &&
-    likes.find((like) => {
-      return like._id === currentUser.id;
-    })
-  );
+  const isLiked = likes.some((like) => like._id === currentUser.id);
 
   const removeIconStyle =
     currentUser.id === owner._id

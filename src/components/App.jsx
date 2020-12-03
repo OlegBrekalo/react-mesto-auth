@@ -23,7 +23,6 @@ import authApi from '../utils/authApi';
 function App() {
   const history = useHistory();
 
-  // eslint-disable-next-line no-unused-vars
   const [init, setInit] = useState(false);
   const [loggedIn, setloggedIn] = useState(false);
   const [isEditProfileOpen, setEditProfileOpen] = useState(false);

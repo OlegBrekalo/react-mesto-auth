@@ -1,13 +1,11 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 function PopupWithForm({ isOpen, title, name, inputs, buttonText, onClose, onSubmit }) {
   const buttonRef = useRef(null);
 
-  let popupStyle = `popup popup-${name}`;
-  if (isOpen) {
-    popupStyle += ' popup_opened';
-  }
+  const popupStyle = classNames('popup', `popup-${name}`, { popup_opened: isOpen });
 
   const handleSubmitForm = (evt) => {
     evt.preventDefault();

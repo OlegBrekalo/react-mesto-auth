@@ -1,24 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 function InfoTooltip({ isOpen, title, type, onClose }) {
-  let popupStyle = `popup`;
-  if (isOpen) {
-    popupStyle += ' popup_opened';
-  }
+  const popupStyle = classNames('popup', { popup_opened: isOpen });
 
-  let iconImageStyle;
-  switch (type) {
-    case 'ok':
-      iconImageStyle = 'popup__info-icon popup__info-icon_type_ok';
-      break;
-    case 'error':
-      iconImageStyle = 'popup__info-icon popup__info-icon_type_error';
-      break;
-    default:
-      iconImageStyle = 'popup__info-icon';
-      break;
-  }
+  const iconImageStyle = classNames('popup__info-icon', {
+    'popup__info-icon_type_ok': type === 'ok',
+    'popup__info-icon_type_error': type === 'error',
+  });
 
   const handleClosePopupByClickOutside = (evt) => {
     if (evt.currentTarget === evt.target) {
